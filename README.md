@@ -1,4 +1,5 @@
-PythonSpaceShooter
-==================
+My suggested revisions to a project written by ChristmasHamGames.
 
-My Python Arcade Space Shooter Project. This is the rough prototype I'll be updating. I've started this project while learning from /r/LearnPython and http://programarcadegames.com/.
+https://github.com/ChristmasHamGames
+
+-Mek
