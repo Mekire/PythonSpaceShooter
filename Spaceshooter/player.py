@@ -1,39 +1,30 @@
-import pygame
+import pygame as pg
+import bullet
 
-class Player(pygame.sprite.Sprite):
-    """ This class represents the Player. """
-    change_x = 0
-    change_y = 0
-    world_shift = 0
-    def __init__(self):
-        """ Set up the player on creation. """
-        # Call the parent class (Sprite) constructor
-        pygame.sprite.Sprite.__init__(self) 
- 
-        self.image = pygame.image.load("sprite.png").convert()
-        
- 
-        self.rect = self.image.get_rect()
-         
-    def update(self):
-        """ Update the player's position. """
-        self.rect.x += self.change_x
-        self.rect.y += self.change_y
-    def go_left(self):
-        """ Called when the user hits the left arrow. """
-        self.change_x = -6
- 
-    def go_right(self):
-        """ Called when the user hits the right arrow. """
-        self.change_x = 6
 
-    def go_up(self):
-        self.change_y = -6
+#Dictionary of keys to unit vectors.
+DIRECT_DICT = {pg.K_LEFT  : (-1, 0),
+               pg.K_RIGHT : ( 1, 0),
+               pg.K_UP    : ( 0,-1),
+               pg.K_DOWN  : ( 0, 1)}
 
-    def go_down(self):
-        self.change_y = 6
- 
-    def stop(self):
-        """ Called when the user lets off the keyboard. """
-        self.change_x = 0 
-        self.change_y = 0
+
+class Player(pg.sprite.Sprite):
+    """This class represents the Player."""
+    def __init__(self, image, position, *groups):
+        pg.sprite.Sprite.__init__(self, *groups)
+        self.image = image
+        self.rect = self.image.get_rect(topleft=position)
+        self.speed = 5
+
+    def shoot(self, *groups):
+        """Create a bullet and add it to groups."""
+        bullet.Bullet(self.rect.center, *groups)
+
+    def update(self, keys, screen_rect):
+        """Update the player's position and keep him on screen."""
+        for key in DIRECT_DICT:
+            if keys[key]:
+                self.rect.x += DIRECT_DICT[key][0]*self.speed
+                self.rect.y += DIRECT_DICT[key][1]*self.speed
+        self.rect.clamp_ip(screen_rect) #Keep player on screen.

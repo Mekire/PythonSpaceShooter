@@ -1,17 +1,17 @@
-import pygame
+import pygame as pg
 
-black    = (   0,   0,   0)
-class Bullet(pygame.sprite.Sprite):
-    """ This class represents the bullet . """
-    def __init__(self):
-        # Call the parent class (Sprite) constructor
-        pygame.sprite.Sprite.__init__(self) 
- 
-        self.image = pygame.Surface([4, 10])
-        self.image.fill(black)
- 
-        self.rect = self.image.get_rect()
-         
-    def update(self):
-        """ Move the bullet. """
-        self.rect.y -= 5
+
+class Bullet(pg.sprite.Sprite):
+    """This class represents the bullet."""
+    def __init__(self, position, *groups):
+        pg.sprite.Sprite.__init__(self, *groups)
+        self.image = pg.Surface((4,10)).convert()
+        self.image.fill(pg.Color("black"))
+        self.rect = self.image.get_rect(center=position)
+        self.speed = 6
+
+    def update(self, keys, screen_rect):
+        """Move the bullet; kill if it travels off screen."""
+        self.rect.y -= self.speed
+        if not self.rect.colliderect(screen_rect):
+            self.kill()

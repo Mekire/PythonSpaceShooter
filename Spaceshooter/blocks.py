@@ -1,24 +1,22 @@
-import pygame
 import random
+import pygame as pg
 
-black    = (   0,   0,   0)
-class Block(pygame.sprite.Sprite):
-    """ This class represents the block. """
-    def __init__(self):
-        # Call the parent class (Sprite) constructor
-        pygame.sprite.Sprite.__init__(self) 
- 
-        self.image = pygame.image.load("rock.png").convert()
-        self.image.set_colorkey(black)
 
-        self.rect = self.image.get_rect()
+class Block(pg.sprite.Sprite):
+    """This class represents the block."""
+    def __init__(self, image, position, *groups):
+        pg.sprite.Sprite.__init__(self, *groups)
+        self.image = image
+        self.rect = self.image.get_rect(topleft=position)
+        self.speed = 1
 
-    def reset_pos(self):
-        self.rect.y = random.randrange(-300, -20)
-        self.rect.x = random.randrange(700-20)
+    def reset_pos(self, screen_rect):
+        """Reset block to a random location slightly above the screen."""
+        self.rect.x = random.randrange(screen_rect.width-self.rect.width)
+        self.rect.y = random.randrange(-100, -20)
 
-    def update(self):
-        self.rect.y += 1
-
-        if self.rect.y > 410:
-            self.reset_pos()
+    def update(self, keys, screen_rect):
+        """Update the position of the block; reset if it leaves the screen."""
+        self.rect.y += self.speed
+        if self.rect.y > screen_rect.bottom:
+            self.reset_pos(screen_rect)
